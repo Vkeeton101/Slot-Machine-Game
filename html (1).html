@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<title></title>
+	<meta name="generator" content="LibreOffice 24.8.3.2 (Linux)"/>
+	<meta name="created" content="00:00:00"/>
+	<meta name="changed" content="00:00:00"/>
+	<style type="text/css">
+		@page { size: 8.5in 11in; margin: 0.79in }
+		p { line-height: 115%; margin-bottom: 0.1in; background: transparent }
+		pre { background: transparent }
+		pre.western { font-family: "Liberation Mono", monospace; font-size: 10pt }
+		pre.cjk { font-family: "Noto Sans Mono CJK SC", monospace; font-size: 10pt }
+		pre.ctl { font-family: "Liberation Mono", monospace; font-size: 10pt }
+	</style>
+</head>
+<body lang="en-US" link="#000080" vlink="#800000" dir="ltr"><pre class="western">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;Daily Slot Machine&lt;/title&gt;
+    &lt;style&gt;
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        .slot-machine {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .slot {
+            width: 80px;
+            height: 80px;
+            font-size: 30px;
+            text-align: center;
+            line-height: 80px;
+            border: 2px solid black;
+            margin: 5px;
+            display: inline-block;
+        }
+        #spin-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        #message {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+    &lt;h1&gt;Spin the Slot Machine&lt;/h1&gt;
+    &lt;p&gt;Win a $5 Gift Card! You can spin once per day.&lt;/p&gt;
+
+    &lt;div class=&quot;slot-machine&quot;&gt;
+        &lt;div class=&quot;slot&quot; id=&quot;slot1&quot;&gt;❓&lt;/div&gt;
+        &lt;div class=&quot;slot&quot; id=&quot;slot2&quot;&gt;❓&lt;/div&gt;
+        &lt;div class=&quot;slot&quot; id=&quot;slot3&quot;&gt;❓&lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;button id=&quot;spin-btn&quot;&gt;Spin&lt;/button&gt;
+    &lt;p id=&quot;message&quot;&gt;&lt;/p&gt;
+
+    &lt;script&gt;
+        const symbols = [&quot;🍒&quot;, &quot;🍋&quot;, &quot;🍉&quot;, &quot;⭐&quot;, &quot;💰&quot;]; 
+        const spinButton = document.getElementById(&quot;spin-btn&quot;);
+        const message = document.getElementById(&quot;message&quot;);
+        const slot1 = document.getElementById(&quot;slot1&quot;);
+        const slot2 = document.getElementById(&quot;slot2&quot;);
+        const slot3 = document.getElementById(&quot;slot3&quot;);
+
+        function getRandomSymbol() {
+            return symbols[Math.floor(Math.random() * symbols.length)];
+        }
+
+        function generateConfirmationNumber() {
+            return &quot;WIN-&quot; + Math.floor(100000 + Math.random() * 900000);
+        }
+
+        function getLastSpinDate() {
+            return localStorage.getItem(&quot;lastSpinDate&quot;);
+        }
+
+        function setLastSpinDate() {
+            const today = new Date().toISOString().split(&quot;T&quot;)[0];
+            localStorage.setItem(&quot;lastSpinDate&quot;, today);
+        }
+
+        function canSpinToday() {
+            const lastSpin = getLastSpinDate();
+            const today = new Date().toISOString().split(&quot;T&quot;)[0];
+            return lastSpin !== today;
+        }
+
+        function isWinner() {
+            const today = new Date();
+            const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / 86400000);
+            return (dayOfYear % 2 === 0 &amp;&amp; Math.random() &lt; 0.1); // Adjust for 2 winners every 2 days
+        }
+
+        function spinSlots() {
+            if (!canSpinToday()) {
+                message.innerText = &quot;You can only spin once per day! Try again tomorrow.&quot;;
+                return;
+            }
+
+            setLastSpinDate();
+            
+            slot1.innerText = getRandomSymbol();
+            slot2.innerText = getRandomSymbol();
+            slot3.innerText = getRandomSymbol();
+
+            if (isWinner()) {
+                const confirmationNumber = generateConfirmationNumber();
+                message.innerText =🎉 You won! Your confirmation number: ${confirmationNumber}`;
+                
+                // Log the winner
+                fetch(&quot;https://script.google.com/macros/s/AKfycbz7gToEnk538smm-m56erHVi32ufh9Oo0bibDXZDKRPaAo83bQEN0YwW4qHz0aK6zEc/exec&quot;, {
+    method: &quot;POST&quot;,
+    headers: { &quot;Content-Type&quot;: &quot;application/json&quot; },
+    body: JSON.stringify({ confirmationNumber })
+})
+.then(response =&gt; response.text())
+.then(data =&gt; console.log(&quot;Logged to Google Sheets:&quot;, data))
+.catch(error =&gt; console.error(&quot;Error:&quot;, error));
+            } else {
+                message.innerText = &quot;Sorry, you didn't win today. Try again tomorrow!&quot;;
+            }
+        }
+
+        spinButton.addEventListener(&quot;click&quot;, spinSlots);
+    &lt;/script&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</body>
+</html>
